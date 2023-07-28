@@ -23,8 +23,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to retrieve Drive client: %v", err)
 	}
-
+	//如果文件量過多可以調整PageSize
 	r, err := srv.Files.List().PageSize(10).
+		//nextPageToken 透過Toke換頁
 		Fields("nextPageToken, files(id, name, mimeType, parents)").
 		Context(ctx).Do()
 	if err != nil {
@@ -32,7 +33,7 @@ func main() {
 	}
 
 	for _, f := range r.Files {
-
+		//跳過資料夾
 		if f.MimeType == "application/vnd.google-apps.folder" {
 			continue
 		}
@@ -77,4 +78,8 @@ func Download(ctx context.Context, srv *drive.Service, name, id string) error {
 	}
 
 	return nil
+}
+
+func GrafanaSecheduleUpdate() {
+
 }
